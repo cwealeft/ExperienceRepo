@@ -1,3 +1,3 @@
 # ExperienceRepo
 
-Code Projects and examples of my experience.
+Examples of my coding/data manipulation. Includes MATLAB, Java, c++, VBA, Excel, and Verilog.

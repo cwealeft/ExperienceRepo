@@ -1,0 +1,57 @@
+module top_module (
+    input [31:0] a,
+    input [31:0] b,
+    output [31:0] sum
+);//
+	wire cin1, cout1, cout2;
+    
+    add16 bigAdd1 ( a[15:0], b[15:0], 0, sum[15:0], cout1);
+    add16 bigAdd2 ( a[31:16], b[31:16], cout1, sum[31:16], cout2);
+
+endmodule
+
+module add1 ( input a, input b, input cin, output sum, output cout );
+
+// Full adder module here
+    always @ (a or b or cin) begin
+        {cout,sum} = a + b + cin;
+    end
+
+
+
+    module top_module ( 
+    input [2:0] sel, 
+    input [3:0] data0,
+    input [3:0] data1,
+    input [3:0] data2,
+    input [3:0] data3,
+    input [3:0] data4,
+    input [3:0] data5,
+    output reg [3:0] out   );//
+
+    always@(*) begin  // This is a combinational circuit
+        case (sel)
+            3'b000: out = data0;
+            3'b001: out = data1;
+            3'b010: out = data2;
+            3'b011: out = data3;
+            3'b100: out = data4;
+            3'b101: out = data5;
+            default: out = 0;
+        endcase
+        
+    end
+
+endmodule
+
+
+module top_module (
+    input [7:0] a, b, c, d,
+    output [7:0] min);//
+
+    // assign intermediate_result1 = compare? true: false;
+    wire [7:0] min2, min3;
+    assign min2 = (a<b) ? a:b;
+    assign min3 = (c<d) ? c:d;
+    assign min = (min2<min3) ? min2:min3;
+endmodule

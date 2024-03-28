@@ -1,0 +1,99 @@
+'                                        Christine Weale
+
+Option Explicit
+Sub OKCtours()
+
+'define variables
+Dim numTour As Integer 'P people in tour
+Dim numHour As Double 'H hours of tour
+Dim smBase As Currency 'SBP price base of sm bus
+Dim lgBase As Currency 'LBP price base of lg bus
+Dim extraHr As Double 'ECH extra charged hours caps at 4
+Dim numSmBus As Integer 'NSB number of sm buses
+Dim numLgBus As Integer 'NLB number of lg vuses
+Dim totPrice As Currency 'TP total price of tour (TSBP + TLBP)
+Dim extraSm As Currency  'SEHC price of sm bus in extended hrs: SBP + (extraHr*0.25*SBP)
+Dim extraLg As Currency  'LEHC price of lg bus in extended hrs: LBP + (extraHr*0.25*LBP)
+Dim totalSm As Currency 'TSBP (SE*numHour + SEHC)
+Dim totalLg As Currency 'TLBP (LE*numHour + LEHC)
+Dim smBus As Currency     'SE price of sm bus for 1 hour(NSB * SBP)
+Dim lgBus As Currency     'LE price of lg bus for 1 hour(NLB * LBP)
+Dim exPercen As Double    'EHP subject to change - extra percentage for over 5 hours
+
+'input
+numTour = Worksheets("Tours").Range("D6").Value
+numHour = Worksheets("Tours").Range("D8").Value
+'SBP
+smBase = Worksheets("Tours").Range("E30").Value
+'LBP
+lgBase = Worksheets("Tours").Range("E31").Value
+'EHP
+exPercen = Worksheets("Tours").Range("E33").Value
+
+'process
+If numHour > 5 Then
+    extraHr = numHour - 5
+    numHour = numHour - extraHr 'so extra hours aren't multiplied in process
+Else
+    extraHr = 0
+End If
+'determine buses
+If numTour > 110 Then
+    numSmBus = 0
+    numLgBus = 2
+ElseIf numTour > 90 Then
+    numSmBus = 1
+    numLgBus = 1
+ElseIf numTour > 65 Then
+    numSmBus = 2
+    numLgBus = 0
+ElseIf numTour > 45 Then
+    numSmBus = 0
+    numLgBus = 1
+Else
+    numSmBus = 1
+    numLgBus = 0
+End If
+smBus = numSmBus * smBase
+lgBus = numLgBus * lgBase
+'determine extended price of buses
+If extraHr = 0 Then
+    extraSm = 0
+    extraLg = 0
+ElseIf extraHr >= 5 Then
+    extraSm = 4 * exPercen * smBus
+    extraLg = 4 * exPercen * lgBus
+Else
+    extraSm = extraHr * exPercen * smBus
+    extraLg = extraHr * exPercen * lgBus
+End If
+totalSm = smBus * numHour + extraSm
+totalLg = lgBus * numHour + extraLg
+totPrice = totalSm + totalLg
+
+
+'output
+Worksheets("Tours").Range("B1").Value = "Christine"
+Worksheets("Tours").Range("C1").Value = "Weale"
+'ECH
+Worksheets("Tours").Range("D12").Value = extraHr
+'NSB
+Worksheets("Tours").Range("C16").Value = numSmBus
+'SE
+Worksheets("Tours").Range("C18").Value = smBus
+'NLB
+Worksheets("Tours").Range("E16").Value = numLgBus
+'LE
+Worksheets("Tours").Range("E18").Value = lgBus
+'SEHC
+Worksheets("Tours").Range("C20").Value = extraSm
+'LEHC
+Worksheets("Tours").Range("E20").Value = extraLg
+'TSBP
+Worksheets("Tours").Range("C22").Value = totalSm
+'TLBP
+Worksheets("Tours").Range("E22").Value = totalLg
+'TP
+Worksheets("Tours").Range("D24").Value = totPrice
+
+End Sub
